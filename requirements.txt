@@ -1,0 +1,6 @@
+openai
+langchain
+feedparser
+requests
+beautifulsoup4
+python-dotenv

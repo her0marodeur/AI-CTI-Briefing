@@ -58,5 +58,3 @@ def scrape_bleeping_computer(url):
 
     except Exception as e:
         return f"An error occurred: {e}"
-
-print(scrape_bleeping_computer("https://www.bleepingcomputer.com/news/security/uk-and-allies-expose-russian-fsb-hacking-group-sanction-members/"))

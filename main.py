@@ -41,12 +41,12 @@ headlines = []
 
 articles = parse_feeds()
 
-print(articles)
+#print(articles)
 
 for article in articles:
     headlines.append(article["title"])
 
-llm = OpenAI()
+llm = OpenAI(max_tokens=1024)
 
 summary_template = """
 Given the headlines: 
@@ -67,11 +67,11 @@ chain = LLMChain(llm=llm, prompt=summary_prompt_template)
 
 llm_output = chain.run(headlines=headlines)
 
-print(llm_output)
+#print(llm_output)
 
 selected_headlines = parse_llm_output_to_list(llm_output)
 
-print(selected_headlines)
+#print(selected_headlines)
 
 briefing_template = """
 Given the headlines: 
@@ -83,7 +83,10 @@ And the full text articles selected from these headlines:
 
 {full_articles}
 
-Please write a news briefing. At the bottom of the briefing include links to all articles used for the briefing.
+Please write a news briefing. 
+Also use the headlines provided for your briefing.
+If any CVEs are mentioned mention them in a list of CVEs.
+
 """
 
 briefing_prompt_template = PromptTemplate(
@@ -104,6 +107,19 @@ summary_article_template = """
 Please summarize the following article:
 
 {full_article}
+
+in 80 words.
+
+Focus on the key messages and actionable takeaways for somebody working as a Pentester/Red Teamer.
+
+Include the title in the summary.
+
+Output format should be:
+
+Title
+
+Summary
+
 """
 
 summary_article_template = PromptTemplate(
@@ -123,3 +139,7 @@ for article in full_full_text_articles:
 llm_output = chain.run(headlines_with_links=articles, full_articles=full_text_articles)
 
 print(llm_output)
+for article in full_text_articles:
+    print(article)
+    print()
+    print()
