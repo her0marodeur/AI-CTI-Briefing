@@ -8,7 +8,11 @@ from parse_feeds import parse_feeds
 from scrape_articles import scrape_article
 from cve_intel import get_cve_report
 
+from notifiers import send_telegram_message
+
 import dotenv
+
+send_telegram_message("HI")
 
 
 
@@ -144,7 +148,5 @@ for article in full_full_text_articles:
 llm_output = chain.run(headlines_with_links=articles, full_articles=full_text_articles, cve_report=cve_report)
 
 print(llm_output)
-for article in full_text_articles:
-    print(article)
-    print()
-    print()
+
+send_telegram_message(llm_output)

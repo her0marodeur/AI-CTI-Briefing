@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from telegram import Bot
+import requests
 
 def send_telegram_message(message):
     # Load environment variables from .env file
@@ -11,10 +11,9 @@ def send_telegram_message(message):
 
     chat_id = os.getenv("TELEGRAM_CHAT_ID")
 
-    bot = Bot(token=telegram_bot_token)
-    bot.send_message(chat_id=chat_id, text=message)
+    params = {"chat_id":chat_id, "text":message}
+    url = f"https://api.telegram.org/bot{telegram_bot_token}/sendMessage"
+    requests.post(url, params=params)
 
-
+send_telegram_message("HI")
     
-message = "Hello, this is a test message from my Telegram bot."
-send_telegram_message(message)
