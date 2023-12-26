@@ -12,7 +12,7 @@ from notifiers import send_telegram_message
 
 import dotenv
 
-send_telegram_message("HI")
+
 
 
 
@@ -61,9 +61,13 @@ Given the headlines:
 
 From various news sources.
 
-Please select the 4 most interesting headlines for a daily news briefing intended for a Pentester/Red Teamer. List each headline you select on a new line, preceded by a hyphen and a space. For example:
+Please select the 4 most interesting headlines for a daily news briefing intended for a Pentester/Red Teamer. 
+Please ensure that the headlines are not covering the same topic.
+List each headline you select on a new line, preceded by a hyphen and a space. For example:
 - Headline 1
 - Headline 2
+- Headline 3
+- Headline 4
 """
 
 summary_prompt_template = PromptTemplate(
@@ -95,7 +99,8 @@ And these CVEs with descriptions
 Please write a news briefing. 
 Also use the headlines provided for your briefing.
 From the CVEs and their summaries mention the ones with the most critical impact by CVE ID and say which product is affected and how.
-
+Also provide 3 ideas for an interesting tweet for a cybersecurity Twitter account. 
+The tweets should not just cite news, but provide some comment or analysis based on the overall context of todays news. 
 """
 
 briefing_prompt_template = PromptTemplate(
@@ -149,4 +154,8 @@ llm_output = chain.run(headlines_with_links=articles, full_articles=full_text_ar
 
 print(llm_output)
 
-send_telegram_message(llm_output)
+print(headlines)
+
+print(selected_headlines)
+
+#send_telegram_message(llm_output)
