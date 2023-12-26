@@ -6,6 +6,7 @@ import time
 
 from parse_feeds import parse_feeds
 from scrape_articles import scrape_article
+from cve_intel import get_cve_report
 
 import dotenv
 
@@ -37,16 +38,18 @@ def parse_llm_output_to_list(llm_output):
             headlines_list.append(headline)
     return headlines_list
 
+#prepare articles
 headlines = []
 
 articles = parse_feeds()
 
-#print(articles)
 
 for article in articles:
     headlines.append(article["title"])
 
-llm = OpenAI(max_tokens=1024)
+cve_report = get_cve_report()
+
+llm = OpenAI(max_tokens=2048)
 
 summary_template = """
 Given the headlines: 
@@ -67,11 +70,9 @@ chain = LLMChain(llm=llm, prompt=summary_prompt_template)
 
 llm_output = chain.run(headlines=headlines)
 
-#print(llm_output)
 
 selected_headlines = parse_llm_output_to_list(llm_output)
 
-#print(selected_headlines)
 
 briefing_template = """
 Given the headlines: 
@@ -83,14 +84,18 @@ And the full text articles selected from these headlines:
 
 {full_articles}
 
+And these CVEs with descriptions
+
+{cve_report}
+
 Please write a news briefing. 
 Also use the headlines provided for your briefing.
-If any CVEs are mentioned mention them in a list of CVEs.
+From the CVEs and their summaries mention the ones with the most critical impact by CVE ID and say which product is affected and how.
 
 """
 
 briefing_prompt_template = PromptTemplate(
-    input_variables=["headlines_with_links", "full_articles"], template=briefing_template
+    input_variables=["headlines_with_links", "full_articles", "cve_report"], template=briefing_template
 )
 
 chain = LLMChain(llm=llm, prompt=briefing_prompt_template)
@@ -136,7 +141,7 @@ for article in full_full_text_articles:
 
 
 
-llm_output = chain.run(headlines_with_links=articles, full_articles=full_text_articles)
+llm_output = chain.run(headlines_with_links=articles, full_articles=full_text_articles, cve_report=cve_report)
 
 print(llm_output)
 for article in full_text_articles:

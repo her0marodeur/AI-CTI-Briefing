@@ -36,14 +36,25 @@ def get_cve_summary(cve_id):
         print("Failed to retrieve data")
         return None
 
-    # Parse the JSON response
-    data = response.json()
+    try:
+        data = response.json()
 
-    # Extract the summary
-    summary = data.get('summary', 'No summary available')
+        # Extract the summary
+        summary = data.get('summary', 'No summary available')
+    except:
+        return("No summary for CVE")
     return summary
 
-# Example usage
-cve_id = 'CVE-2010-3333'  # Replace with any CVE ID you are interested in
-summary = get_cve_summary(cve_id)
-print(f"Summary of {cve_id}: {summary}")
+
+def get_cve_report():
+    
+    interesting_cves = []
+
+    cve_list = get_unique_cve_ids_vulnmon()
+
+    for cve in cve_list:
+        cve_summary = get_cve_summary(cve)
+        interesting_cves.append(f"{cve}:  {cve_summary}")
+    
+    return interesting_cves
+
