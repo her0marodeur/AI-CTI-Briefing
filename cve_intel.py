@@ -54,7 +54,7 @@ def get_cve_report():
 
     for cve in cve_list:
         cve_summary = get_cve_summary(cve)
-        interesting_cves.append(f"{cve}:  {cve_summary}")
+        interesting_cves.append(f"{cve}:  {cve_summary[:500]}")
     
     return interesting_cves
 

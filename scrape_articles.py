@@ -2,12 +2,18 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
+
+
 def scrape_article(url):
     if "wired.com" in url:
         article_text = scrape_wired(url)
     elif "bleepingcomputer.com" in url:
         article_text = scrape_bleeping_computer(url)
-    return article_text
+    
+    if len(article_text) > 10240:
+        return article_text[:10240]
+    else:
+        return article_text
 
 
 
